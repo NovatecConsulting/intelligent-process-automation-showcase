@@ -1,0 +1,53 @@
+plugins {
+    id("com.github.johnrengelman.shadow") version "6.1.0"
+    id("io.micronaut.application") version "1.4.2"
+}
+
+version = "0.1"
+group = "novatec.poc.ipa.*"
+
+repositories {
+    jcenter()
+    mavenCentral()
+    mavenLocal()
+}
+
+micronaut {
+    runtime("jetty")
+    testRuntime("junit5")
+    processing {
+        incremental(true)
+        annotations("novatec.poc.ipa.*")
+    }
+}
+
+dependencies {
+    implementation("io.micronaut:micronaut-validation")
+    implementation("io.micronaut:micronaut-runtime")
+    implementation("io.micronaut:micronaut-http-client")
+    runtimeOnly("ch.qos.logback:logback-classic")
+    implementation("info.novatec:micronaut-camunda-bpm-feature:0.0.1-SNAPSHOT")
+    runtimeOnly("com.h2database:h2")
+    implementation("com.sun.xml.bind:jaxb-impl:2.3.3")
+    runtimeOnly("ch.qos.logback:logback-classic")
+    implementation 'org.camunda.bpm.extension:camunda-bpm-mail-core:1.2.0'
+    implementation("org.camunda.bpm:camunda-external-task-client:1.4.1")
+    implementation group: 'org.camunda.connect', name: 'camunda-connect-core', version: '1.0.3'
+    implementation group: 'com.sun.mail', name: 'javax.mail', version: '1.5.5'
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.21'
+    implementation group: 'org.camunda.bpm', name: 'camunda-engine-plugin-connect', version: '7.14.0'
+    runtimeOnly("org.codehaus.groovy:groovy-all:3.0.7") 
+}
+
+application {
+    mainClass.set("novatec.poc.ipa.Application")
+}
+
+java {
+    sourceCompatibility = JavaVersion.toVersion("1.8")
+    targetCompatibility = JavaVersion.toVersion("1.8")
+}
+
+dockerfile {
+    args.set(['-Dmicronaut.server.host=0.0.0.0']) // Jetty must listen on all interfaces, not only on "localhost"
+}

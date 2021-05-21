@@ -1,0 +1,8 @@
+/temp/*
+/src/__pycache__/*
+/env/*
+/.vscode/*
+/data/*
+/raw_text_output/*
+/comprehend_output/*
+entities.csv

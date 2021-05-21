@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" id="_DdZocL47EeOQo_IRkjDF6w" targetNamespace="http://camunda.org/schema/1.0/bpmn" exporter="Camunda Modeler" exporterVersion="4.5.0" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  <bpmn:collaboration id="Collaboration_18dmk3r">
+    <bpmn:participant id="Participant_06y6jqj" name="Employee" processRef="costs_submission_manual" />
+    <bpmn:participant id="Participant_0lo9wpl" name="Invoice Department" />
+    <bpmn:messageFlow id="Flow_0dtg9e4" sourceRef="Participant_0lo9wpl" targetRef="CostsSubmissionRequired" />
+    <bpmn:messageFlow id="Flow_01b4014" sourceRef="Send_Invoice" targetRef="Participant_0lo9wpl" />
+  </bpmn:collaboration>
+  <bpmn:process id="costs_submission_manual" name="Costs Submission Manual" isExecutable="true">
+    <bpmn:userTask id="Insert_Data" name="Insert&#10;Data" camunda:formKey="embedded:deployment:/task-form.html" camunda:assignee="demo">
+      <bpmn:incoming>Flow_1ygymgg</bpmn:incoming>
+      <bpmn:outgoing>Flow_0jzwlai</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Upload_Documents" name="Upload Invoice" camunda:formKey="embedded:deployment:/upload-form.html" camunda:assignee="demo">
+      <bpmn:incoming>Flow_0jzwlai</bpmn:incoming>
+      <bpmn:outgoing>Flow_14qfoyn</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:startEvent id="CostsSubmissionRequired" name="Costs Submission Inquiry Received">
+      <bpmn:outgoing>Flow_1ygymgg</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_05m0osk" messageRef="Message_0q35ba5" />
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_14qfoyn" sourceRef="Upload_Documents" targetRef="Send_Invoice">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="take">
+          <camunda:script scriptFormat="groovy">import org.apache.commons.io.IOUtils
+
+try {
+File newFile = new File('invoice.pdf')
+if (!newFile.exists()) {
+   newFile.createNewFile()
+}
+  OutputStream outputStream = new FileOutputStream(newFile)
+  IOUtils.copy(invoice_document, outputStream)
+  String attachmentPath = newFile.getAbsolutePath()
+  execution.setVariable("attachmentPath", attachmentPath)
+} catch (FileNotFoundException e) {
+  println('Catch FileNotFoundException in Set Variables Script')
+} catch (IOException e) {
+  println('Catch IOException in Set Variables Script')
+}</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1ygymgg" sourceRef="CostsSubmissionRequired" targetRef="Insert_Data" />
+    <bpmn:sequenceFlow id="Flow_0en6cd0" sourceRef="Send_Invoice" targetRef="EndEvent_1" />
+    <bpmn:sequenceFlow id="Flow_0jzwlai" sourceRef="Insert_Data" targetRef="Upload_Documents" />
+    <bpmn:serviceTask id="Send_Invoice" name="Send Costs Submission Report">
+      <bpmn:extensionElements>
+        <camunda:connector>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="text">Dear Invoice,
+
+Please find attached a new invoice submission.
+
+
+Details:
+
+
+Firstname: ${firstname}
+Lastname: ${lastname}
+Type: ${receipts}
+Costs: ${costs}
+Date: ${dateField}
+
+
+The corresponding file is also attached.
+
+
+Best regards,
+Intelligent Process Automation@Novatec</camunda:inputParameter>
+            <camunda:inputParameter name="fileNames">
+              <camunda:list>
+                <camunda:value>${attachmentPath}</camunda:value>
+              </camunda:list>
+            </camunda:inputParameter>
+            <camunda:inputParameter name="subject">Invoice</camunda:inputParameter>
+            <camunda:inputParameter name="to">invoice.novatec@gmail.com</camunda:inputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>mail-send</camunda:connectorId>
+        </camunda:connector>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_14qfoyn</bpmn:incoming>
+      <bpmn:outgoing>Flow_0en6cd0</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="EndEvent_1" name="Costs&#10;Submitted">
+      <bpmn:incoming>Flow_0en6cd0</bpmn:incoming>
+    </bpmn:endEvent>
+  </bpmn:process>
+  <bpmn:message id="Message_0q35ba5" name="CostsSubmissionRequiredManual" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_18dmk3r">
+      <bpmndi:BPMNShape id="Participant_06y6jqj_di" bpmnElement="Participant_06y6jqj" isHorizontal="true">
+        <dc:Bounds x="140" y="210" width="670" height="230" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0jzwlai_di" bpmnElement="Flow_0jzwlai">
+        <di:waypoint x="394" y="322" />
+        <di:waypoint x="440" y="322" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0en6cd0_di" bpmnElement="Flow_0en6cd0">
+        <di:waypoint x="700" y="322" />
+        <di:waypoint x="742" y="322" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ygymgg_di" bpmnElement="Flow_1ygymgg">
+        <di:waypoint x="248" y="322" />
+        <di:waypoint x="294" y="322" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_14qfoyn_di" bpmnElement="Flow_14qfoyn">
+        <di:waypoint x="540" y="322" />
+        <di:waypoint x="600" y="322" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_0k9otqc_di" bpmnElement="Insert_Data">
+        <dc:Bounds x="294" y="282" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1kmjrbe_di" bpmnElement="Upload_Documents">
+        <dc:Bounds x="440" y="282" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0vnu6a6_di" bpmnElement="CostsSubmissionRequired">
+        <dc:Bounds x="212" y="304" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="187" y="356" width="89" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1cvsd3k_di" bpmnElement="Send_Invoice">
+        <dc:Bounds x="600" y="282" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_EndEvent_3" bpmnElement="EndEvent_1">
+        <dc:Bounds x="742" y="304" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="736" y="347" width="50" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_0dcdxzy_di" bpmnElement="Participant_0lo9wpl" isHorizontal="true">
+        <dc:Bounds x="140" y="80" width="670" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0dtg9e4_di" bpmnElement="Flow_0dtg9e4">
+        <di:waypoint x="230" y="140" />
+        <di:waypoint x="230" y="304" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_01b4014_di" bpmnElement="Flow_01b4014">
+        <di:waypoint x="650" y="282" />
+        <di:waypoint x="650" y="140" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

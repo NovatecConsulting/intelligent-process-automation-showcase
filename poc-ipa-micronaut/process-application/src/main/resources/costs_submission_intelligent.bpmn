@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" id="_DdZocL47EeOQo_IRkjDF6w" targetNamespace="http://camunda.org/schema/1.0/bpmn" exporter="Camunda Modeler" exporterVersion="4.5.0" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  <bpmn:collaboration id="Collaboration_0jlfaak">
+    <bpmn:participant id="Participant_1vy1xut" name="Employee" processRef="costs_submission_intelligent" />
+    <bpmn:participant id="Participant_13p91ek" name="Invoice Department" />
+    <bpmn:participant id="Participant_1cj6jxf" name="Intelligent Document Analysis Service" />
+    <bpmn:messageFlow id="Flow_1rexema" sourceRef="Participant_13p91ek" targetRef="StartEvent_1" />
+    <bpmn:messageFlow id="Flow_046yu3z" sourceRef="Activity_0jy5icz" targetRef="Participant_13p91ek" />
+    <bpmn:messageFlow id="Flow_0tnk4s1" sourceRef="Activity_09xrjrp" targetRef="Participant_1cj6jxf" />
+    <bpmn:messageFlow id="Flow_1rfkmtj" sourceRef="Participant_1cj6jxf" targetRef="Activity_09xrjrp" />
+  </bpmn:collaboration>
+  <bpmn:process id="costs_submission_intelligent" name="Costs Submission Intelligent" isExecutable="true">
+    <bpmn:userTask id="Activity_1e8bkht" name="Upload&#10;Invoice" camunda:formKey="embedded:app:forms/upload-form.html" camunda:assignee="demo">
+      <bpmn:incoming>Flow_0rlh4wa</bpmn:incoming>
+      <bpmn:outgoing>Flow_1s2o8qk</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="Activity_09xrjrp" name="Analyze&#10;Document" camunda:type="external" camunda:topic="IDA">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="attachmentPath">${attachmentPath}</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1s2o8qk</bpmn:incoming>
+      <bpmn:outgoing>Flow_0dqpqlp</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="EndEvent_1" name="Costs&#10;Submitted">
+      <bpmn:incoming>Flow_0mm4mhr</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:startEvent id="StartEvent_1" name="Costs Submission Inquiry&#10;Received">
+      <bpmn:outgoing>Flow_0rlh4wa</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_118zjiq" messageRef="Message_15bgncd" />
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="Activity_0jy5icz" name="Send Costs Submission Report">
+      <bpmn:extensionElements>
+        <camunda:connector>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="fileNames">
+              <camunda:list>
+                <camunda:value>${attachmentPath}</camunda:value>
+              </camunda:list>
+            </camunda:inputParameter>
+            <camunda:inputParameter name="text">Dear Invoice,
+
+Please find attached a new invoice submission.
+
+
+Details:
+
+
+Firstname: ${firstname}
+Lastname: ${lastname}
+Type: ${type}
+Costs: ${costs}
+Date: ${date}
+
+
+The corresponding file is also attached.
+
+
+Best regards,
+Intelligent Process Automation@Novatec</camunda:inputParameter>
+            <camunda:inputParameter name="subject">Invoice</camunda:inputParameter>
+            <camunda:inputParameter name="to">invoice.novatec@gmail.com</camunda:inputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>mail-send</camunda:connectorId>
+        </camunda:connector>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0dqpqlp</bpmn:incoming>
+      <bpmn:outgoing>Flow_0mm4mhr</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0mm4mhr" sourceRef="Activity_0jy5icz" targetRef="EndEvent_1" />
+    <bpmn:sequenceFlow id="Flow_0rlh4wa" sourceRef="StartEvent_1" targetRef="Activity_1e8bkht" />
+    <bpmn:sequenceFlow id="Flow_0dqpqlp" sourceRef="Activity_09xrjrp" targetRef="Activity_0jy5icz" />
+    <bpmn:sequenceFlow id="Flow_1s2o8qk" sourceRef="Activity_1e8bkht" targetRef="Activity_09xrjrp">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="take">
+          <camunda:script scriptFormat="groovy">import org.apache.commons.io.IOUtils
+
+try {
+File newFile = new File('invoice.pdf')
+if (!newFile.exists()) {
+   newFile.createNewFile()
+}
+  OutputStream outputStream = new FileOutputStream(newFile)
+  IOUtils.copy(invoice_document, outputStream)
+  String attachmentPath = newFile.getAbsolutePath()
+  execution.setVariable("attachmentPath", attachmentPath)
+} catch (FileNotFoundException e) {
+  println('Catch FileNotFoundException in Set Variables Script')
+} catch (IOException e) {
+  println('Catch IOException in Set Variables Script')
+}</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+    </bpmn:sequenceFlow>
+  </bpmn:process>
+  <bpmn:message id="Message_15bgncd" name="CostsSubmissionRequiredIntelligent" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0jlfaak">
+      <bpmndi:BPMNShape id="Participant_1vy1xut_di" bpmnElement="Participant_1vy1xut" isHorizontal="true">
+        <dc:Bounds x="120" y="177" width="700" height="250" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1s2o8qk_di" bpmnElement="Flow_1s2o8qk">
+        <di:waypoint x="370" y="302" />
+        <di:waypoint x="430" y="302" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0dqpqlp_di" bpmnElement="Flow_0dqpqlp">
+        <di:waypoint x="530" y="302" />
+        <di:waypoint x="620" y="302" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0rlh4wa_di" bpmnElement="Flow_0rlh4wa">
+        <di:waypoint x="218" y="302" />
+        <di:waypoint x="270" y="302" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0mm4mhr_di" bpmnElement="Flow_0mm4mhr">
+        <di:waypoint x="720" y="302" />
+        <di:waypoint x="762" y="302" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_1e8bkht_di" bpmnElement="Activity_1e8bkht">
+        <dc:Bounds x="270" y="262" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1r9fmyy_di" bpmnElement="Activity_09xrjrp">
+        <dc:Bounds x="430" y="262" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_EndEvent_3" bpmnElement="EndEvent_1">
+        <dc:Bounds x="762" y="284" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="755" y="327" width="50" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0akukx5_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="182" y="284" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="155" y="326" width="89" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0jy5icz_di" bpmnElement="Activity_0jy5icz">
+        <dc:Bounds x="620" y="262" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_01vveki_di" bpmnElement="Participant_13p91ek" isHorizontal="true">
+        <dc:Bounds x="120" y="80" width="700" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_1cj6jxf_di" bpmnElement="Participant_1cj6jxf" isHorizontal="true">
+        <dc:Bounds x="120" y="490" width="700" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1rexema_di" bpmnElement="Flow_1rexema">
+        <di:waypoint x="200" y="140" />
+        <di:waypoint x="200" y="284" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_046yu3z_di" bpmnElement="Flow_046yu3z">
+        <di:waypoint x="670" y="262" />
+        <di:waypoint x="670" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0tnk4s1_di" bpmnElement="Flow_0tnk4s1">
+        <di:waypoint x="450" y="342" />
+        <di:waypoint x="450" y="490" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1rfkmtj_di" bpmnElement="Flow_1rfkmtj">
+        <di:waypoint x="510" y="490" />
+        <di:waypoint x="510" y="342" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

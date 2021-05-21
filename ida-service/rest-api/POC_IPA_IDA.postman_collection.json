@@ -1,0 +1,56 @@
+{
+	"info": {
+		"_postman_id": "bd83a5b1-0dd7-4d1b-9c06-19947f455fe6",
+		"name": "POC_IPA_IDA",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "ida",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "{/PATH/}"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:5000/ida",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"ida"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "camunda_ida",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/camunda/ida",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"camunda",
+						"ida"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

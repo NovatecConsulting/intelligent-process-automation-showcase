@@ -1,0 +1,22 @@
+micronaut:
+  application:
+    name: novatec-poc-ipa-micronaut
+  router:
+    static-resources:
+      default:
+        enabled: true
+        mapping: "/forms/**"
+        paths: classpath:forms
+camunda:
+  admin-user:
+    id: demo
+    password: demo
+  generic-properties:
+    properties:
+      initialize-telemetry: true
+  webapps:
+    enabled: true
+  rest:
+    enabled: true
+  filter:
+    create: "All tasks"

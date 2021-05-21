@@ -1,0 +1,78 @@
+<form role="form" name="form">
+
+  <div class="form-group">
+    <label for="firstname-field">Firstname</label>
+    <input required cam-variable-name="firstname" cam-variable-type="String" class="form-control" />
+  </div>
+
+  <div class="form-group">
+    <label for="lastname-field">Lastname</label>
+    <input required cam-variable-name="lastname" cam-variable-type="String" class="form-control" />
+  </div>
+
+  <div class="form-group">
+    <label for="receipts">2 Choose your receipt type from the list:</label>
+    <select required="true" name="receipt" id="receipt" cam-variable-name="receipts" cam-variable-type="String" class="form-control">
+      <option value="(110) Taxi 0% OHNE MWST">(110) Taxi 0% OHNE MWST</option>
+      <option value="(111) Taxi 7% / 5%  MWST.5">(111) Taxi 7% / 5%  MWST.5</option>
+      <option value="(112) Taxi 19% / 16%  MWST.16">(112) Taxi 19% / 16%  MWST.16</option>
+      <option value="(113) Flug 19% / 16%  MWST.16">(113) Flug 19% / 16%  MWST.16</option>
+      <option value="(114) Flug 0% OHNE MWST">(114) Flug 0% OHNE MWST</option>
+      <option value="(115) ö. Nah- und Fernverkehr 7% / 5% MWST.5">(115) ö. Nah- und Fernverkehr 7% / 5% MWST.5</option>
+      <option value="(116) ö. Fernverkehr (bspw. Fernbus) 19% / 16%  MWST.16">(116) ö. Fernverkehr (bspw. Fernbus) 19% / 16%  MWST.16</option>
+      <option value="(117) ö. Verkehrsmittel Ausland 0%  OHNE MWST">(117) ö. Verkehrsmittel Ausland 0%  OHNE MWST</option>
+      <option value="(118) Parkgebühren 19% / 16%  MWST.16">(118) Parkgebühren 19% / 16%  MWST.16</option>
+      <option value="(119) Parkgebühren 0% OHNE MWST">(119) Parkgebühren 0% OHNE MWST</option>
+      <option value="(120) Mietwagen 19% / 16% MWST.16">(120) Mietwagen 19% / 16% MWST.16</option>
+      <option value="(121) Mietwagen 0%  OHNE MWST">(121) Mietwagen 0%  OHNE MWST</option>
+      <option value="(122) Betriebskosten Mietwagen 19% / 16%  MWST.16">(122) Betriebskosten Mietwagen 19% / 16%  MWST.16</option>
+      <option value="(123) Betriebskosten Mietwagen 0% OHNE MWST">(123) Betriebskosten Mietwagen 0% OHNE MWST</option>
+      <option value="(207) Tatsächliche Frühstückkosten Hotelübernachtung  MWST.16">(207) Tatsächliche Frühstückkosten Hotelübernachtung  MWST.16</option>
+      <option value="(311) Hotelübernachtung m.Frühstück MWST.5">(311) Hotelübernachtung m.Frühstück MWST.5</option>
+      <option value="(312) Hotelübernachtung m.Frühstück Ausland OHNE MWST312">(312) Hotelübernachtung m.Frühstück Ausland OHNE MWST</option>
+      <option value="(313) Hotelübernachtung ohne Frühstück  MWST.5">(313) Hotelübernachtung ohne Frühstück  MWST.5</option>
+      <option value="(314) Hotelübernachtung ohne Frühstück Ausl.  OHNE MWST">(314) Hotelübernachtung ohne Frühstück Ausl.  OHNE MWST</option>
+      <option value="(401) Bewirtung Restaurant mit Externen MWST.16">(401) Bewirtung Restaurant mit Externen MWST.16</option>
+      <option value="(402) Bewirtung Trinkgeld OHNE MWST">(402) Bewirtung Trinkgeld OHNE MWST</option>
+      <option value="(403) Arbeitsessen nur NT-Mitarbeiter OHNE MWST">(403) Arbeitsessen nur NT-Mitarbeiter OHNE MWST</option>
+      <option value="(404) Arbeitsessen Trinkgeld  OHNE MWST">(404) Arbeitsessen Trinkgeld  OHNE MWST</option>
+      <option value="(501) Kfz-Betriebskosten 19% / 16%  MWST.16">(501) Kfz-Betriebskosten 19% / 16%  MWST.16</option>
+      <option value="(502) Kfz-Betriebskosten 0% OHNE MWST">(502) Kfz-Betriebskosten 0% OHNE MWST</option>
+      <option value="(702) Bürobedarf  MWST.16">(702) Bürobedarf  MWST.16</option>
+      <option value="(703) Zeitschriften und Bücher 19% / 16%  MWST.5">(703) Zeitschriften und Bücher 19% / 16%  MWST.5</option>
+      <option value="(704) Zeitschriften und Bücher 0% OHNE MWST">(704) Zeitschriften und Bücher 0% OHNE MWST</option>
+      <option value="(705) Telefon 19% / 16% MWST.16">(705) Telefon 19% / 16% MWST.16</option>
+      <option value="(706) Telefon 0%  OHNE MWST">(706) Telefon 0%  OHNE MWST</option>
+      <option value="(707) Porto 0%  OHNE MWST">(707) Porto 0%  OHNE MWST</option>
+      <option value="(708) Weiterbildung MWST.16">(708) Weiterbildung MWST.16</option>
+      <option value="(709) Kosten des Geldverkehrs OHNE MWST">(709) Kosten des Geldverkehrs OHNE MWST</option>
+      <option value="(722) Sonstiges 0%  OHNE MWST">(722) Sonstiges 0%  OHNE MWST</option>
+      <option value="(723) Sonstiges 7% / 5% MWST.5">(723) Sonstiges 7% / 5% MWST.5</option>
+      <option value="(724) Sonstiges 19% / 16% MWST.16">(724) Sonstiges 19% / 16% MWST.16</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="costs-field">Costs</label>
+    <input required cam-variable-name="costs" cam-variable-type="Double" class="form-control" />
+  </div>
+
+  <div class="form-group">
+    <label for="dateField">
+      Date Field
+    </label>
+    <div class="input-group">
+      <input class="form-control" name="dateField" cam-variable-type="String" cam-variable-name="dateField" type="text" uib-datepicker-popup="yyyy-MM-dd" is-open="dateFieldOpeneddateField" />
+      <div class="input-group-btn">
+        <button type="button" class="btn btn-default" ng-click="opendateField($event)">
+          <i class="glyphicon glyphicon-calendar"></i>
+        </button>
+      </div>
+      <script cam-script type="text/form-script">
+        $scope.opendateField = function ($event) { $event.preventDefault(); $event.stopPropagation(); $scope.dateFieldOpeneddateField = true; };
+      </script>
+    </div>
+  </div>
+
+</form>
+
