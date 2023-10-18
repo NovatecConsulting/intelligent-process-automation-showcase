@@ -33,6 +33,6 @@ sagemaker==2.23.2
 six==1.15.0
 smdebug-rulesconfig==1.0.1
 tqdm==4.56.0
-urllib3==1.26.3
+urllib3==1.26.18
 Werkzeug==1.0.1
 zipp==3.4.0
